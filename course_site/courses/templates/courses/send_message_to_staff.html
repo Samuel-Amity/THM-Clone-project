@@ -1,0 +1,6 @@
+<!-- courses/templates/courses/send_message_to_staff.html -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Message</button>
+</form>

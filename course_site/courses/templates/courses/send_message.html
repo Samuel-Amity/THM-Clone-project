@@ -1,0 +1,23 @@
+<h2>Messages with Staff</h2>
+<div>
+    {% for message in messages %}
+        <div>
+            {% if message.sender == request.user %}
+                <strong>You:</strong> 
+            {% else %}
+                <strong>Staff ({{ message.sender.username }}):</strong> 
+            {% endif %}
+            {{ message.message }}
+            <small>{{ message.timestamp }}</small>
+        </div>
+    {% empty %}
+        <p>No messages yet.</p>
+    {% endfor %}
+</div>
+
+<!-- Form to send a new message -->
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="message" placeholder="Enter your message here" required></textarea>
+    <button type="submit">Send</button>
+</form>

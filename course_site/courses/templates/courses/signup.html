@@ -1,0 +1,14 @@
+<body>
+    <div class="form-container">
+        <h2>Sign Up</h2>
+        <form method="post" class="form-container">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="btn-container">
+                <button type="submit" class="btn-primary">Sign Up</button>
+                <a href="{% url 'home' %}" class="btn-secondary">Home</a>
+                <a href="javascript:history.back()" class="btn-warning">Previous</a>
+            </div>
+        </form>
+    </div>
+</body>

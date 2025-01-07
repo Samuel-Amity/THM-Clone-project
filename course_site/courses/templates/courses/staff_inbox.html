@@ -1,0 +1,11 @@
+<!-- courses/templates/courses/staff_inbox.html -->
+<h2>Staff Inbox</h2>
+<ul>
+    {% for message in messages %}
+        <li>
+            <strong>From:</strong> {{ message.sender.username }}<br>
+            <strong>Message:</strong> {{ message.content }}<br>
+            <a href="{% url 'reply_to_user_message' message.id %}">Reply</a>
+        </li>
+    {% endfor %}
+</ul>

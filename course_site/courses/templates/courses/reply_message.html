@@ -1,0 +1,10 @@
+<h2>Reply to Message</h2>
+
+<p><strong>Original Message:</strong> {{ original_message.message }}</p>
+<p><strong>From:</strong> {{ original_message.sender.username }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="reply" placeholder="Type your reply here" rows="4" required></textarea>
+    <button type="submit">Send Reply</button>
+</form>

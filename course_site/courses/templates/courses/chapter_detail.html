@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ chapter.title }}</title>
+</head>
+<body>
+    <h1>{{ chapter.title }}</h1>
+    <p>{{ chapter.content }}</p>
+
+    <h2>Question</h2>
+    <p>{{ chapter.question }}</p>
+
+    {% if chapter.hint %}
+    <h3>Hint</h3>
+    <p>{{ chapter.hint }}</p>
+    {% else %}
+    <p><em>No hint available for this chapter.</em></p>
+    {% endif %}
+</body>
+</html>

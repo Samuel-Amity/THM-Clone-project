@@ -1,0 +1,7 @@
+<!-- courses/templates/courses/reply_to_user_message.html -->
+<h2>Reply to: {{ message.sender.username }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Reply</button>
+</form>

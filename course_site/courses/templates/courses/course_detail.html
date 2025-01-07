@@ -1,0 +1,75 @@
+<h1>{{ course.title }}</h1>
+<p>{{ course.description }}</p>
+
+<h2>Chapters</h2>
+{% for chapter in chapters %}
+<div>
+    <button onclick="toggleDropdown('{{ chapter.id }}')">{{ chapter.title }}</button>
+    <div id="dropdown-{{ chapter.id }}" style="display: none; margin-left: 20px;">
+        <p>{{ chapter.content }}</p>
+        <h3>Question: {{ chapter.question }}</h3>
+
+        <form method="POST" class="answer-form" data-chapter-id="{{ chapter.id }}">
+            {% csrf_token %}
+            <label for="user_answer_{{ chapter.id }}">Your Answer:</label>
+            <input type="text" id="user_answer_{{ chapter.id }}" name="user_answer" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="feedback-{{ chapter.id }}"></div> <!-- This will show feedback -->
+
+        {% if chapter.hint %}
+            <p><strong>Hint:</strong> {{ chapter.hint }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById('dropdown-' + id);
+        if (dropdown.style.display === 'none') {
+            dropdown.style.display = 'block';
+        } else {
+            dropdown.style.display = 'none';
+        }
+    }
+
+    // Handle form submission using AJAX
+    const forms = document.querySelectorAll('.answer-form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const chapterId = form.getAttribute('data-chapter-id');
+            const userAnswer = form.querySelector('[name="user_answer"]').value;
+
+            // Send the data via AJAX
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': form.querySelector('[name="csrfmiddlewaretoken"]').value
+                },
+                body: new URLSearchParams({
+                    'chapter_id': chapterId,
+                    'user_answer': userAnswer
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show feedback based on whether the answer is correct or not
+                const feedbackElement = document.getElementById('feedback-' + chapterId);
+                if (data.correct) {
+                    feedbackElement.innerHTML = '<p style="color: green;">Correct!</p>';
+                } else {
+                    feedbackElement.innerHTML = '<p style="color: red;">Incorrect. Try again!</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
