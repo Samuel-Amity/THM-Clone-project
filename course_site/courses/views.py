@@ -92,12 +92,12 @@ from django.contrib.auth.models import User
 def is_staff_user(user):
     return user.is_staff
 
-# User chat view
+# User chat view (for both staff and users)
 @login_required
 def user_chat(request):
-    staff_users = User.objects.filter(is_staff=True)  # Get all staff users
-    messages = Message.objects.filter(sender=request.user) | Message.objects.filter(receiver=request.user)
-    messages = messages.order_by('timestamp')
+    # Fetch all messages, regardless of the sender or receiver
+    messages = Message.objects.all().order_by('timestamp')  
+
     form = MessageForm()
 
     if request.method == 'POST':
@@ -105,7 +105,8 @@ def user_chat(request):
         if form.is_valid():
             message = form.save(commit=False)
             message.sender = request.user
-            message.receiver = staff_users.first()  # Assign first staff user for simplicity
+            # For simplicity, send to the first staff user if not specified
+            message.receiver = User.objects.filter(is_staff=True).first()  
             message.save()
             return redirect('user_chat')
 
